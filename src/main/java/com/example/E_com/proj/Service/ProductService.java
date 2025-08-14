@@ -19,7 +19,8 @@ public class ProductService {
     }
 
     public Product getProduct(int id) {
-        return repo.findById(id).orElse(null);
+        return repo.findById(id).orElseThrow(()->  new RuntimeException("Product not found"));
+        //return repo.findById(id).orElse(null);
     }
 
     public Product addProduct(Product product, MultipartFile imageFile) throws IOException {
