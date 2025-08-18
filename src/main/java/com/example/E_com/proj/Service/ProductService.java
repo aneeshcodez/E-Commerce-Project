@@ -38,13 +38,37 @@ public class ProductService {
         return repo.save(product);
 
     }
-
     public Product updateProduct(int id, Product product, MultipartFile imageFile) throws IOException {
-        product.setImageName(imageFile.getOriginalFilename());
-        product.setImageType(imageFile.getContentType());
-        product.setImageData(imageFile.getBytes());
-        return repo.save(product);
+        // Check product exists by id
+        Product existingProduct = repo.findById(id)
+                .orElseThrow(() -> new NoSuchProductExistsException("No product found with id " + id));
+
+        // Update fields
+        existingProduct.setName(product.getName());
+        existingProduct.setDescription(product.getDescription());
+        existingProduct.setBrand(product.getBrand());
+        existingProduct.setCategory(product.getCategory());
+        existingProduct.setPrice(product.getPrice());
+
+        // Update image
+        existingProduct.setImageName(imageFile.getOriginalFilename());
+        existingProduct.setImageType(imageFile.getContentType());
+        existingProduct.setImageData(imageFile.getBytes());
+
+        return repo.save(existingProduct);
     }
+
+
+//    public Product updateProduct(int id, Product product, MultipartFile imageFile) throws IOException {
+//        if(!repo.existsByName(product.getName())){
+//            throw new NoSuchProductExistsException("No Such Product exist with "+ product.getName());
+//
+//        }
+//        product.setImageName(imageFile.getOriginalFilename());
+//        product.setImageType(imageFile.getContentType());
+//        product.setImageData(imageFile.getBytes());
+//        return repo.save(product);
+//    }
 
     public void deleteProduct(int id) {
         repo.deleteById(id);
