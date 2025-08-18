@@ -15,4 +15,5 @@ public interface ProductRepo extends JpaRepository<Product, Integer> {
             "LOWER(p.category) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Product> searchProducts(String keyword);
 
+    boolean existsByName(String name); // Checks if product name already exists
 }

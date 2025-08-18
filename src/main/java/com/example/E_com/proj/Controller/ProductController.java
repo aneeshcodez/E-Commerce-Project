@@ -29,24 +29,14 @@ public class ProductController {
     @GetMapping("/product/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable("id") int id){
         Product product = service.getProduct(id);
-        if(product!=null){
-            return new ResponseEntity<>(product,HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(product,HttpStatus.OK);
 
     }
 
     @PostMapping("/product")
-    public ResponseEntity<?> addProduct(@RequestPart Product product, @RequestPart MultipartFile imageFile) {
-        try{
+    public ResponseEntity<?> addProduct(@RequestPart Product product, @RequestPart MultipartFile imageFile) throws IOException {
             Product product1 = service.addProduct(product,imageFile);
             return new ResponseEntity<>(product1,HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
     }
 
     @GetMapping("/product/{productId}/image")

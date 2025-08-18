@@ -1,5 +1,7 @@
 package com.example.E_com.proj.Service;
 
+import com.example.E_com.proj.Exception.NoSuchProductExistsException;
+import com.example.E_com.proj.Exception.ProductAlreadyExistsException;
 import com.example.E_com.proj.Model.Product;
 import com.example.E_com.proj.Repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +21,22 @@ public class ProductService {
     }
 
     public Product getProduct(int id) {
-        return repo.findById(id).orElseThrow(()->  new RuntimeException("Product not found"));
+        return repo.findById(id).orElseThrow(()-> new NoSuchProductExistsException("Not found Product with id = " + id));
         //return repo.findById(id).orElse(null);
     }
 
     public Product addProduct(Product product, MultipartFile imageFile) throws IOException {
+        if(repo.existsByName(product.getName())){
+            throw new ProductAlreadyExistsException("Product already exists: " + product.getName());
+
+        }
+        //Saving the product
         product.setImageName(imageFile.getOriginalFilename());
         product.setImageType(imageFile.getContentType());
         product.setImageData(imageFile.getBytes());
 
         return repo.save(product);
+
     }
 
     public Product updateProduct(int id, Product product, MultipartFile imageFile) throws IOException {
