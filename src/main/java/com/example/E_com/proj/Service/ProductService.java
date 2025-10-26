@@ -59,16 +59,6 @@ public class ProductService {
     }
 
 
-//    public Product updateProduct(int id, Product product, MultipartFile imageFile) throws IOException {
-//        if(!repo.existsByName(product.getName())){
-//            throw new NoSuchProductExistsException("No Such Product exist with "+ product.getName());
-//
-//        }
-//        product.setImageName(imageFile.getOriginalFilename());
-//        product.setImageType(imageFile.getContentType());
-//        product.setImageData(imageFile.getBytes());
-//        return repo.save(product);
-//    }
 
     public void deleteProduct(int id) {
         repo.deleteById(id);

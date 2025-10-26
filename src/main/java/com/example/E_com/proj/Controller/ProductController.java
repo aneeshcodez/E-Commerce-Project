@@ -1,5 +1,7 @@
 package com.example.E_com.proj.Controller;
+import com.example.E_com.proj.Model.AuthReq;
 import com.example.E_com.proj.Model.Product;
+import com.example.E_com.proj.Service.JwtService;
 import com.example.E_com.proj.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,9 @@ public class ProductController {
 
     @Autowired
     ProductService service;
+
+    @Autowired
+    JwtService jwtService;
 
 
     @GetMapping("/products")
@@ -73,4 +78,13 @@ public class ProductController {
         System.out.println("searching with " + keyword);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
+
+    @PostMapping("/authenticate")
+    public String authenticateAndGetToken(@RequestBody AuthReq authReq){
+        return jwtService.generateToken(authReq.getUsername());
+
+
+    }
+
+
 }
