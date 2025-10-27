@@ -5,11 +5,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoder;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 
+@Service
 public class JwtService {
 
     public static final String SECRET = "aG9sbG93ZXZlbnR1YWxseXB1YmxpY2RvdGJyb3RoZXJ0aG91c3RyZXRjaGhvc3BpdGE=";
