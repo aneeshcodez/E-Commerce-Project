@@ -1,5 +1,5 @@
 package com.example.E_com.proj.Controller;
-import com.example.E_com.proj.Model.AuthReq;
+import com.example.E_com.proj.Dto.AuthReq;
 import com.example.E_com.proj.Model.Product;
 import com.example.E_com.proj.Service.JwtService;
 import com.example.E_com.proj.Service.ProductService;
