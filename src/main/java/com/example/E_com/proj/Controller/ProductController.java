@@ -27,14 +27,14 @@ public class ProductController {
 
 
     @GetMapping("/products")
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<Product>> getAllProducts() {
         return new ResponseEntity<>(service.getAllProducts(), HttpStatus.OK);
 
     }
 
     @GetMapping("/product/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<Product> getProduct(@PathVariable("id") int id){
         Product product = service.getProduct(id);
         return new ResponseEntity<>(product,HttpStatus.OK);

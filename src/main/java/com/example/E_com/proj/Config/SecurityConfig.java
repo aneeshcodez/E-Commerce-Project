@@ -47,8 +47,8 @@ public class SecurityConfig {
 
     }
 
-//    private AuthenticationProvider authenticationProvider() {
-//
-//    }
 
 }
+// When a user attempts to log in, Spring Security uses the configured PasswordEncoder to encode the provided password and then
+// compares it with the stored encoded password associated with the user. If they match, authentication is successful
+
