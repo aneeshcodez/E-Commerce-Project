@@ -1,7 +1,6 @@
 package com.example.E_com.proj.Controller;
-import com.example.E_com.proj.Dto.AuthReq;
+import com.example.E_com.proj.Entity.UserInfo;
 import com.example.E_com.proj.Model.Product;
-import com.example.E_com.proj.Service.JwtService;
 import com.example.E_com.proj.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +21,7 @@ public class ProductController {
     @Autowired
     ProductService service;
 
-    @Autowired
-    JwtService jwtService;
+
 
 
     @GetMapping("/products")
@@ -82,11 +80,13 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @PostMapping("/authenticate")
-    public String authenticateAndGetToken(@RequestBody AuthReq authReq){
-        return jwtService.generateToken(authReq.getUsername());
 
 
+    //USER REGISTRATION
+
+    @PostMapping("/new")
+    public String addNewUser(@RequestBody UserInfo userInfo){
+        return service.addNewUser(userInfo);
     }
 
 

@@ -1,10 +1,13 @@
 package com.example.E_com.proj.Service;
 
+import com.example.E_com.proj.Entity.UserInfo;
 import com.example.E_com.proj.Exception.NoSuchProductExistsException;
 import com.example.E_com.proj.Exception.ProductAlreadyExistsException;
 import com.example.E_com.proj.Model.Product;
 import com.example.E_com.proj.Repository.ProductRepo;
+import com.example.E_com.proj.Repository.UserInfoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +18,12 @@ import java.util.List;
 public class ProductService {
     @Autowired
     private ProductRepo repo;
+
+    @Autowired
+    private UserInfoRepo userInfoRepo;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder ;
 
     public List<Product> getAllProducts() {
         return repo.findAll();
@@ -66,5 +75,13 @@ public class ProductService {
 
     public List<Product> searchProducts(String keyword) {
         return repo.searchProducts(keyword);
+    }
+
+    public String addNewUser(UserInfo userInfo){
+        userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+        userInfoRepo.save(userInfo);
+
+        return "User Added to DB";
+
     }
 }
