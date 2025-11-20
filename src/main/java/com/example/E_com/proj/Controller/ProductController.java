@@ -9,6 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +29,9 @@ public class ProductController {
 
     @Autowired
     JwtService jwtService ;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
 
     @GetMapping("/products")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -90,10 +97,17 @@ public class ProductController {
     }
 
     @PostMapping("/authenticate")
-    public String authenticate(@RequestBody AuthReq authReq){
-        return jwtService.generateToken(authReq.getUsername());
+    public String authenticateUser(@RequestBody AuthReq authReq) {
 
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authReq.getUsername(), authReq.getPassword()));
+
+        if (authentication.isAuthenticated()) {
+            return jwtService.generateToken(authReq.getUsername());
+        } else {
+            throw new UsernameNotFoundException("Invalid user details");
+        }
     }
+
 
 
 }
