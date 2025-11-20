@@ -27,6 +27,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // To Check whether the password entered by user is same as password in the DB
     @Bean
     public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -40,7 +41,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/new").permitAll()
+                        .requestMatchers("/api/new","/api/authenticate").permitAll()
                         .requestMatchers("/api/products", "/api/product/**").authenticated()
                         .anyRequest().authenticated()
                 )
