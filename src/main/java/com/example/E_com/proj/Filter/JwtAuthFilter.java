@@ -16,10 +16,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+// This filter performs token verification & user authentication for every request.
+
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
-    JwtService jwtService ;
+    private JwtService jwtService ;
 
     @Autowired
     private UserInfoUserDetailsService userDetailsService;
@@ -35,8 +37,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             username = jwtService.extractUsername(token);
         }
 
-        // This filter performs token verification & user authentication for every request.
-
+        // To Check if user is not already authenticated
         if(username!=null && SecurityContextHolder.getContext().getAuthentication()==null){
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             if(jwtService.validateToken(token,userDetails)){
@@ -49,7 +50,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     }
 
-    // To Check if user is not already authenticated
+
 
 }
 
