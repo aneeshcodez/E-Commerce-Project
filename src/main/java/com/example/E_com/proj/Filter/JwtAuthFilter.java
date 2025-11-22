@@ -1,11 +1,17 @@
 package com.example.E_com.proj.Filter;
 
+import com.example.E_com.proj.Config.UserInfoUserDetailsService;
 import com.example.E_com.proj.Service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -14,6 +20,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
     JwtService jwtService ;
+
+    @Autowired
+    private UserInfoUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -26,5 +35,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             username = jwtService.extractUsername(token);
         }
 
+        // This filter performs token verification & user authentication for every request.
+
+        if(username!=null && SecurityContextHolder.getContext().getAuthentication()==null){
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            if(jwtService.validateToken(token,userDetails)){
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+            filterChain.doFilter(request, response);
+        }
+
     }
+
+    // To Check if user is not already authenticated
+
 }
+
+
