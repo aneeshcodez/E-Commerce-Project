@@ -34,14 +34,13 @@ public class ProductController {
     AuthenticationManager authenticationManager;
 
     @GetMapping("/products")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<Product>> getAllProducts() {
         return new ResponseEntity<>(service.getAllProducts(), HttpStatus.OK);
 
     }
 
     @GetMapping("/product/{id}")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<Product> getProduct(@PathVariable("id") int id){
         Product product = service.getProduct(id);
         return new ResponseEntity<>(product,HttpStatus.OK);
@@ -49,12 +48,14 @@ public class ProductController {
     }
 
     @PostMapping("/product")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> addProduct(@RequestPart Product product, @RequestPart MultipartFile imageFile) throws IOException {
             Product product1 = service.addProduct(product,imageFile);
             return new ResponseEntity<>(product1,HttpStatus.CREATED);
     }
 
     @GetMapping("/product/{productId}/image")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<byte[]> getImageByid(@PathVariable int productId){
         Product product = service.getProduct(productId);
         byte[] imageFile = product.getImageData();
@@ -65,12 +66,14 @@ public class ProductController {
     }
 
     @PutMapping("/product/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> updateProduct(@PathVariable int id , @RequestPart Product product, @RequestPart MultipartFile imageFile) throws IOException {
         Product product1 = service.updateProduct(id, product, imageFile);
         return new ResponseEntity<>("updated", HttpStatus.OK);
     }
 
     @DeleteMapping("/product/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") int id){
         Product product = service.getProduct(id);
         if (product != null) {
@@ -82,6 +85,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/search")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<List<Product>> searchProducts(@RequestParam String keyword) {
 
         List<Product> products = service.searchProducts(keyword);
