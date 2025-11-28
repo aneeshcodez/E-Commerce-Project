@@ -64,7 +64,6 @@ public class ProductController {
     }
 
     @GetMapping("/product/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<Product> getProduct(@PathVariable("id") int id) {
         Product product = service.getProduct(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
@@ -78,7 +77,6 @@ public class ProductController {
     }
 
     @GetMapping("/product/{productId}/image")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public ResponseEntity<byte[]> getImageByid(@PathVariable int productId) {
         Product product = service.getProduct(productId);
         byte[] imageFile = product.getImageData();
