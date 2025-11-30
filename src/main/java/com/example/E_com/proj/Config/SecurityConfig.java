@@ -59,6 +59,7 @@ public class SecurityConfig {
                                 "/api/new",
                                 "/api/authenticate",
                                 "/api/products",
+                                "/api/products/search",
                                 "/api/product/*",
                                 "/api/product/*/image"
                         ).permitAll()

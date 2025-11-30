@@ -137,10 +137,25 @@ public class ProductController {
 
 
     @GetMapping("/products/search")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
-    public ResponseEntity<List<Product>> searchProducts(@RequestParam String keyword) {
+    public ResponseEntity<List<ProductListDTO>> searchProducts(@RequestParam String keyword) {
         List<Product> products = service.searchProducts(keyword);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+
+        List<ProductListDTO> dtoList = products.stream().map(product -> {
+            ProductListDTO dto = new ProductListDTO();
+            dto.setId(product.getId());
+            dto.setName(product.getName());
+            dto.setDescription(product.getDescription());
+            dto.setPrice(product.getPrice());
+
+            if (product.getImageData() != null) {
+                String base64 = Base64.getEncoder().encodeToString(product.getImageData());
+                dto.setImageUrl("data:" + product.getImageType() + ";base64," + base64);
+            }
+
+            return dto;
+        }).collect(Collectors.toList());
+
+        return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
 
 

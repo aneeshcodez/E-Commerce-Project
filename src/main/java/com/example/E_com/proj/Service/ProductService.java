@@ -74,7 +74,7 @@ public class ProductService {
     }
 
     public List<Product> searchProducts(String keyword) {
-        return repo.searchProducts(keyword);
+        return repo.searchProducts(keyword.toLowerCase());
     }
 
     public String addNewUser(UserInfo userInfo){
