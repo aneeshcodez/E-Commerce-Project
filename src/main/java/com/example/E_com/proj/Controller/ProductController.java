@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -72,9 +73,22 @@ public class ProductController {
 
     @PostMapping("/product")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<?> addProduct(@RequestPart Product product, @RequestPart MultipartFile imageFile) throws IOException {
-        Product product1 = service.addProduct(product, imageFile);
-        return new ResponseEntity<>(product1, HttpStatus.CREATED);
+    public ResponseEntity<?> addProduct(
+            @RequestParam String name,
+            @RequestParam String description,
+            @RequestParam BigDecimal price,
+            @RequestParam String category,
+            @RequestParam(required = false) MultipartFile imageFile
+    ) throws IOException {
+
+        Product product = new Product();
+        product.setName(name);
+        product.setDescription(description);
+        product.setPrice(price);
+        product.setCategory(category);
+
+        Product saved = service.addProduct(product, imageFile);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
     @GetMapping("/product/{productId}/image")
@@ -87,11 +101,24 @@ public class ProductController {
                 .body(imageFile);
     }
 
-
     @PutMapping("/product/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> updateProduct(@PathVariable int id, @RequestPart Product product, @RequestPart MultipartFile imageFile) throws IOException {
-        service.updateProduct(id, product, imageFile);
+    public ResponseEntity<String> updateProduct(
+            @PathVariable int id,
+            @RequestParam String name,
+            @RequestParam String description,
+            @RequestParam BigDecimal price,
+            @RequestParam String category,
+            @RequestParam(required = false) MultipartFile imageFile
+    ) throws IOException {
+
+        Product updatedProduct = new Product();
+        updatedProduct.setName(name);
+        updatedProduct.setDescription(description);
+        updatedProduct.setPrice(price);
+        updatedProduct.setCategory(category);
+
+        service.updateProduct(id, updatedProduct, imageFile);
         return new ResponseEntity<>("updated", HttpStatus.OK);
     }
 
